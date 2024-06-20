@@ -2,7 +2,6 @@ Software Development Experience 2 - CPSC/ECE 3520
 December 8, 2023
 
 Sean Hermes
-C15404781
 shermes@clemson.edu
 Clemson University
 
