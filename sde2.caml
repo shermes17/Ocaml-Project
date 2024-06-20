@@ -1,0 +1,103 @@
+(* Software Development Experience 2 *)
+(* Sean Hermes *)
+
+
+(**************************** 1 - First Duplicate *****************************)
+let rec fD_helper = function (visited, list) ->
+  if (list = []) then -10000
+  else if (List.mem (List.hd list) visited = true)
+     then List.hd list
+  else
+     fD_helper(List.append visited [List.hd list] ,List.tl list)
+;;
+
+let rec first_duplicate = function (list) -> 
+    if (list = []) then -10000
+    else fD_helper([], list)
+;;
+
+
+(**************************** 2 - First Non-Repeat ****************************)
+let rec remove = function(target, input, output) -> 
+  if(input = []) then output
+  else if( target = List.hd input) 
+    then remove(target, List.tl input, output)
+  else
+     remove(target, List.tl input, (List.append output [List.hd input]))
+;;
+
+let rec nonRepeatHelper = function (list,visited, output) -> 
+  if (list = [] && output = []) then -10000
+  else if (list = []) then List.hd output
+  else if (List.mem (List.hd list) visited = true) then 
+    nonRepeatHelper(List.tl list, visited, remove(List.hd list, output, []))
+  else 
+    nonRepeatHelper(List.tl list, List.append visited [List.hd list], output)
+;;
+
+let rec first_nonrepeating = function (list) -> nonRepeatHelper(list,[], list);;
+
+(******************************* 3 - Sum of Two *******************************)
+let rec isTarget = function (a,b,target) ->  
+  if (a + b = target) then true
+  else false
+;;
+
+let rec checkSum = function (x, list, target) -> 
+  if (list = []) then false
+  else if (isTarget(x,List.hd list,target) = true) then true
+  else
+    checkSum(x, List.tl list, target)
+;;
+
+let rec sumOfTwo = function (list1, list2, target) ->
+  if (list1 = []) then false
+  else if (checkSum(List.hd list1, list2, target) = true) then true
+  else
+    sumOfTwo(List.tl list1, list2, target)
+;;
+
+(********************************** 4 - Take **********************************)
+let rec takeHelper = function (target, count, input, output) -> 
+  if (target < 0) then [] 
+  else if (input = []) then output
+  else if (target = count) 
+    then List.append output [List.hd input]
+  else
+        takeHelper(target, count+1, List.tl input, List.append output [List.hd input])
+  ;;
+
+let rec take = function(target, list) -> takeHelper(target, 1, list, []);;
+
+(********************************** 5 - Drop **********************************)
+let rec dropHelper = function (target,count, input, output) -> 
+  if (target < 0 || input = []) then [] 
+  else if (target < count) then input
+  else if (target = count) then List.tl input
+  else
+        dropHelper(target, count+1, List.tl input, [])
+  ;;
+
+let rec drop = function(target, list) -> dropHelper(target, 1, list, []);;
+
+(******************************** 6 - Powerset ********************************)
+let rec psHelper2 = function (a, b,savedB, powerset) ->
+  if (a = []) then powerset
+  else if (b = []) 
+      then psHelper2(List.tl a,savedB ,savedB, powerset)
+  else if (List.mem (List.append a b) powerset = false) 
+      then psHelper2(a,b,savedB, List.append powerset [List.append a b])
+  else if (List.mem (List.append a [List.hd b]) powerset= false)
+      then psHelper2(a,b,savedB, List.append powerset [List.append a [List.hd b]])
+  else psHelper2(a,List.tl b,savedB,powerset);;
+
+let rec psHelper1 = function (a,b,powerset) ->
+  if (a = []) then powerset
+  else if (List.mem [List.hd a] powerset = false)
+       then psHelper1(a, b, List.append powerset [[List.hd a]])
+  else 
+      psHelper1(List.tl a,List.append b [List.hd a], psHelper2(List.append b [List.hd a], List.tl a, List.tl a,powerset))
+
+;;
+
+let rec powerset = function (list) -> psHelper1(list, [], [[]]);; 
